@@ -4,17 +4,20 @@ import imutils
 import time
 import numpy as np
 
+confidence=0.4
+
+#load in network
 model='mobnet/MobileNetSSD_deploy.caffemodel'
 prototxt='mobnet/MobileNetSSD_deploy.prototxt'
-#load in network
 net=cv.dnn.readNetFromCaffe(prototxt, model)
-#start video capture
+
 #list of classes that can be detected by model
 CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 		"bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
 		"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
 		"sofa", "train", "tvmonitor"]
-vc = cv.VideoCapture("rtsp://admin:@192.168.1.186:554/h264Preview_01_main")
+#start video capture
+vc = cv.VideoCapture("rtsp://admin:@192.168.1.224:554/h264Preview_01_main")
 while vc.isOpened()==False:
     continue
 while True:
@@ -31,7 +34,8 @@ while True:
     presence=False
     for i in np.arange(0, outputs.shape[2]):
         idx = int(outputs[0, 0, i, 1])
-        if CLASSES[idx] == "person":
+        if CLASSES[idx] == "person" and float(outputs[0, 0 , i , 2])>confidence:
+            print(float(outputs[0, 0 , i , 2]))
             presence = True
     if presence:
         print("there a dude in der")

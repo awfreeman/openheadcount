@@ -4,8 +4,8 @@ import imutils
 import time
 import numpy as np
 
-confidence=0.2
-frameskip=5
+confidence=0.1
+frameskip=10
 #load in network
 model='mobnet/MobileNetSSD_deploy.caffemodel'
 prototxt='mobnet/MobileNetSSD_deploy.prototxt'

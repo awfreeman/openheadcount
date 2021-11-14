@@ -28,7 +28,7 @@ while True:
     key = cv.waitKey(20)
     if key == 27: # exit on ESC
         break
-    if skip == 5:
+    if skip == frameskip:
         skip = 0
         presence = 0
         blob = cv.dnn.blobFromImage(image=frame, scalefactor=0.5, size=(1024,768))

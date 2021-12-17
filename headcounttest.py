@@ -20,11 +20,13 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 vc = cv.VideoCapture("yt1s.com - HD CCTV Camera video 3MP 4MP iProx CCTV HDCCTVCamerasnet retail store.mp4")
 while vc.isOpened()==False:
     continue
+
+objects = list()
 skip=0
 while True:
+    objects = list()
     rval, frame = vc.read()
     frame = imutils.resize(frame, width=500)
-    cv.imshow("preview", frame)
     (H, W) = frame.shape[:2]
     key = cv.waitKey(20)
     if key == 27: # exit on ESC
@@ -35,12 +37,17 @@ while True:
         blob = cv.dnn.blobFromImage(frame, 0.007843, (W, H), 127.5)
         net.setInput(blob)
         outputs = net.forward()
+
+        newobjects = list()
         for i in np.arange(0, outputs.shape[2]):
             idx = int(outputs[0, 0, i, 1])
             if CLASSES[idx] == "person" and float(outputs[0, 0 , i , 2])>confidence:
                 box = outputs[0, 0, i, 3:7] * np.array([W, H, W, H])
                 (startX, startY, endX, endY) = box.astype("int")
-                print(box)
+                detections.append(box)
+                frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
+        
+        cv.imshow("funny", frame)
             
     skip=skip+1
         

@@ -43,11 +43,11 @@ while True:
             if CLASSES[idx] == "person" and float(outputs[0, 0 , i , 2])>confidence:
                 box = outputs[0, 0, i, 3:7] * np.array([W, H, W, H])
                 (startX, startY, endX, endY) = box.astype("int")
-                detections.append(box)
+                newobjects.append(((startX+endX)//2,(startY+endY)//2))
                 frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
-        
+                frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
         cv.imshow("funny", frame)
-            
+        
     skip=skip+1
         
 		

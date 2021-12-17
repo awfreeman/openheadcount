@@ -24,7 +24,6 @@ while vc.isOpened()==False:
 objects = list()
 skip=0
 while True:
-    objects = list()
     rval, frame = vc.read()
     frame = imutils.resize(frame, width=500)
     (H, W) = frame.shape[:2]

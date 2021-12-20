@@ -3,7 +3,7 @@ import argparse
 import imutils
 import time
 import numpy as np
-import centroidtracker as tracker
+from centroidtracker import Tracker
 
 CONFIDENCE=0
 #load in network
@@ -15,14 +15,13 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 		"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
 		"sofa", "train", "tvmonitor"]
 #start video capture
-vc = cv.VideoCapture("vid.mp4")
+vc = cv.VideoCapture("yt1s.com - HD CCTV Camera video 3MP 4MP iProx CCTV HDCCTVCamerasnet retail store.mp4")
 while vc.isOpened()==False:
     continue
 #initialize network
-net=cv.dnn.readNetFromCaffe(prototxt, model)
+net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
 
-
-
+track=Tracker(100)
 objects = list()
 while True:
     rval, frame = vc.read()
@@ -46,8 +45,11 @@ while True:
             #add new centroids to list
             newobjects.append(((startX+endX)//2,(startY+endY)//2))
             
-            #frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
-            #frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
+            frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
+            frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
+    track.update(newobjects)
+    for ident, x in track.objects.items():
+        frame = cv.putText(frame, str(ident), x, cv.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 8)
 
     cv.imshow("funny", frame)
 		

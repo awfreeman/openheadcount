@@ -15,13 +15,13 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 		"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
 		"sofa", "train", "tvmonitor"]
 #start video capture
-vc = cv.VideoCapture("yt1s.com - HD CCTV Camera video 3MP 4MP iProx CCTV HDCCTVCamerasnet retail store.mp4")
+vc = cv.VideoCapture("vid.mp4")
 while vc.isOpened()==False:
     continue
 #initialize network
 net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
 
-track=Tracker(25)
+track=Tracker(25, 1)
 objects = list()
 while True:
     rval, frame = vc.read()
@@ -48,7 +48,7 @@ while True:
             frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
             frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
     track.update(newobjects)
-    for ident, x in track.objects.items():
+    for ident, x in track.objecthistory[0].items():
         frame = cv.putText(frame, str(ident), x, cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 8)
     
     cv.imshow("preview", frame)

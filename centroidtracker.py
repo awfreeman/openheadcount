@@ -11,7 +11,7 @@ class Tracker:
         del self.objects[ident]
     def update(self, newobjects):
         #update all existing points, deregistering if neccesary
-        removed = list()
+        missing = list()
         for ident, x in self.objects.items():
             closest_point = None
             for y in newobjects:
@@ -19,11 +19,11 @@ class Tracker:
                 if dist<self.threshold and (closest_point is None or dist<closest_point[1]):
                     closest_point = (y, dist)
             if closest_point is None:
-                removed.append(ident)
+                missing.append(ident)
             else:
                 self.objects[ident] = closest_point[0]
                 newobjects.remove(closest_point[0])
-        for x in removed:
+        for x in missing:
             self.deregister(x)
         for x in newobjects:
             self.register(x)

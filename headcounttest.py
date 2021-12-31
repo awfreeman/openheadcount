@@ -21,7 +21,7 @@ while vc.isOpened()==False:
 #initialize network
 net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
 
-track=Tracker(25, 3)
+track=Tracker(15, 3)
 objects = list()
 while True:
     rval, frame = vc.read()
@@ -45,11 +45,12 @@ while True:
             #add new centroids to list
             newobjects.append(((startX+endX)//2,(startY+endY)//2))
             
-            frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
-            frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
+            #frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
+            #frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
     track.update(newobjects)
     for x in track.objects:
-        frame = cv.putText(frame, str(x[2]), x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 8)
+        frame = cv.circle(frame, x[0], radius=3, color=(0,255,0), thickness=-1)
+        frame = cv.putText(frame, str(x[2]), x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
     
     cv.imshow("preview", frame)
 		

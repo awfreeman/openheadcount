@@ -21,7 +21,7 @@ while vc.isOpened()==False:
 #initialize network
 net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
 
-track=Tracker(25, 1)
+track=Tracker(25, 3)
 objects = list()
 while True:
     rval, frame = vc.read()
@@ -48,8 +48,8 @@ while True:
             frame = cv.rectangle(frame, pt1=(startX, startY), pt2=(endX,endY), color=(0,0,255), thickness=3)
             frame = cv.circle(frame, newobjects[-1], radius=3, color=(0,255,0), thickness=-1)
     track.update(newobjects)
-    for ident, x in track.objecthistory[0].items():
-        frame = cv.putText(frame, str(ident), x, cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 8)
+    for x in track.objects:
+        frame = cv.putText(frame, str(x[2]), x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 8)
     
     cv.imshow("preview", frame)
 		

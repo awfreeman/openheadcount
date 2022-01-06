@@ -3,6 +3,8 @@ import argparse
 import imutils
 import time
 import numpy as np
+from matplotlib.path import Path
+from scipy.spatial import ConvexHull
 from centroidtracker import Tracker
 
 CONFIDENCE=0
@@ -24,7 +26,7 @@ while vc.isOpened()==False:
 
 #initialize network
 net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
-
+vertexes = np.array([(0, 372//2), (250, 372//3), (499, 372//2), (499, 372), (0, 372)])
 track = Tracker(15, 3)
 objects = list()
 while True:
@@ -63,8 +65,21 @@ while True:
     #draw centroids and ID's 
     for x in track.objects:
         frame = cv.circle(frame, x[0], radius=3, color=(0,255,0), thickness=-1)
-        frame = cv.putText(frame, str(x[2]), x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
+        #frame = cv.putText(frame, str(x[2]), x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
     
+    hull = ConvexHull(vertexes)
+    hull_path = Path(vertexes[hull.vertices])
+
+    #draw line
+    for x in range(0, len(vertexes)):
+        frame = cv.line(frame, vertexes[x], vertexes[x-1], (255,0,0), 4)
+    
+
+    for x in track.objects:
+        if hull_path.contains_point(x[0]):
+            frame = cv.putText(frame, "In", x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
+        else:
+            frame = cv.putText(frame, "Out", x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
     cv.imshow("preview", frame)
 		
 

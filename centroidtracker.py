@@ -1,11 +1,17 @@
 import math
+from matplotlib.path import Path
+from scipy.spatial import ConvexHull
+
 class Tracker:
-    def __init__(self, threshold: float, max_ttl: int):
+    def __init__(self, threshold: float, max_ttl: int, vertexes):
         self.objects = list()
         self.max_ttl = max_ttl
         self.threshold = threshold
         self.accum = 0
-        
+        self.hull = ConvexHull(vertexes)
+        self.hull_path = Path(vertexes[self.hull.vertices])
+        self.count = 0
+
     def update(self, detections):
         for index, x in enumerate(self.objects):
             closest_point = None
@@ -16,10 +22,10 @@ class Tracker:
                     closest_point_dist = dist
                     closest_point = y 
             if closest_point is not None:
-                self.objects[index] = [closest_point, 0, x[2]]
+                self.objects[index] = [closest_point, 0, x[2], x[3]]
                 detections.remove(closest_point)
         for x in detections:
-            self.objects.append([x, 0, self.accum])
+            self.objects.append([x, 0, self.accum, None])
             self.accum += 1
         i = 0
         while i < len(self.objects):
@@ -29,7 +35,18 @@ class Tracker:
             else:
                 self.objects[i][1] += 1
                 i += 1 
-
+        i = 0
+        while i < len(self.objects):
+            if self.hull_path.contains_point(self.objects[i][0]):
+                if self.objects[i][3] == False:
+                    self.count += 1
+                self.objects[i][3] = True
+            else:
+                if self.objects[i][3] == True:
+                    self.count -= 1
+                self.objects[i][3] = False
+            i += 1
+        
     def distance(self, a, b): 
         ax = a[0]
         ay = a[1]

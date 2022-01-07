@@ -5,7 +5,9 @@ import time
 import numpy as np
 from centroidtracker import Tracker
 
-CONFIDENCE=0
+CONFIDENCE=.4
+THRESHOLD = 15
+HISTORY = 3
 
 #load in network
 MODEL='mobnet/MobileNetSSD_deploy.caffemodel'
@@ -22,20 +24,19 @@ vc = cv.VideoCapture("vid.mp4")
 while vc.isOpened()==False:
     continue
 
-#initialize network
+#initialize network and centroid tracker
 net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
 vertexes = np.array([(0, 372//2), (250, 372//3), (499, 372//2), (499, 372), (0, 372)])
-track = Tracker(15, 3, vertexes)
+track = Tracker(THRESHOLD, HISTORY, vertexes)
 
 while True:
-    
+
     rval, frame = vc.read()
+    key = cv.waitKey(20)
+    if key == 27 or frame is None: # exit on escape or no further frames
+        break
     frame = imutils.resize(frame, width=500)
     (H, W) = frame.shape[:2]
-    key = cv.waitKey(20)
-    
-    if key == 27: # exit on ESC
-        break
     
     #0.007843:normalizes values to between 0 and 2, 127.5: sets mean value to half brightness
     blob = cv.dnn.blobFromImage(frame, 0.007843, (W, H), 127.5)
@@ -78,6 +79,5 @@ while True:
     frame = cv.putText(frame, str(track.count), (0, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 6)
     cv.imshow("preview", frame)
 		
-
 cv.destroyWindow("preview")
 vc.release()

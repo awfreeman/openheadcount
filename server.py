@@ -1,15 +1,19 @@
 from flask import Flask, render_template, request
+from usermgmt import usermgmt
 
 app = Flask(__name__)
+
 def login_user(uname):
     return 'login success'
 def valid_login(uname, passwd):
     if uname == 'admin':
         return True
     return False
+
 @app.route('/')
 def homepage():
     return render_template('index.html')
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     error = None

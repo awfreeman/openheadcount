@@ -11,9 +11,9 @@ class usermgmt:
         pwhash = str(bcrypt.hashpw(bytes(passwd, 'utf-8'), bytes(salt, 'utf-8')), 'utf-8')
         spwhash = logindf.iloc[0].hash
         if pwhash == spwhash:
-            return "successful login"
+            return True
         else:
-            return "lol dumbass"
+            return False
     def adduser(uname:str, passwd:str):
         if len(passwd)>72:
             return False, "Passwords must be under 72 characters long"

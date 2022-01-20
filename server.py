@@ -4,11 +4,8 @@ from usermgmt import usermgmt
 app = Flask(__name__)
 
 def login_user(uname):
+
     return 'login success'
-def valid_login(uname, passwd):
-    if uname == 'admin':
-        return True
-    return False
 
 @app.route('/')
 def homepage():
@@ -18,7 +15,7 @@ def homepage():
 def login():
     error = None
     if request.method == 'POST':
-        if valid_login(request.form['username'], request.form['password']):
+        if usermgmt.authenticate(request.form['username'], request.form['password']):
             return login_user(request.form['username'])
         else:
             error = 'Invalid login'

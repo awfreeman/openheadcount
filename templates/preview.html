@@ -1,0 +1,28 @@
+<style>
+    body {
+        background-color:lightcyan;    
+    
+    }
+    h1 {
+        color: black;
+        font-size: x-large;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    p {
+        color: black;
+        font-size: medium;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+</style>
+<div style="text-align: center;">
+    <h1>Preview</h1>
+    <canvas id="preview" width="400" height="300" style="border: 1px solid black;">
+    <script>
+        var c = document.getElementById("preview");
+        var ctx = c.getContext("2d");
+        ctx.moveTo(0,0);
+        ctx.lineTo(400, 300);
+        ctx.stroke();
+        </script>
+    </script>
+</div>

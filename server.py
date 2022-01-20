@@ -4,8 +4,7 @@ from usermgmt import usermgmt
 app = Flask(__name__)
 
 def login_user(uname):
-
-    return 'login success'
+    return render_template('preview.html')
 
 @app.route('/')
 def homepage():

@@ -33,8 +33,14 @@ while True:
 
     rval, frame = vc.read()
     key = cv.waitKey(20)
-    if key == 27 or frame is None: # exit on escape or no further frames
+    if key == 27: # exit on escape or no further frames
         break
+    if frame is None:
+        vc = cv.VideoCapture("vid.mp4")
+        while vc.isOpened()==False:
+            continue
+        rval, frame = vc.read()
+
     frame = imutils.resize(frame, width=500)
     (H, W) = frame.shape[:2]
     

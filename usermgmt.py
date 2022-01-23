@@ -28,5 +28,6 @@ class usermgmt:
         salt = str(salt, 'utf-8')
         logindf.loc[len(logindf.index)] = [uname, pwhash, salt]
         logindf.to_csv('conf/login.csv', index=False)
+        return "user successfuly added"
     def rmuser(uname:str, passwd:str):
         pass

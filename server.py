@@ -34,9 +34,12 @@ def generate():
 		# yield the output frame in the byte format
 		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
 			bytearray(encodedImage) + b'\r\n')
-def login_user(uname):
-    return Response(generate(),
+@app.route('/camerafeed')
+def camerafeed():
+	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
+def login_user(uname):
+    return render_template('preview.html')
 @app.route('/')
 def homepage():
     return render_template('index.html')
@@ -51,5 +54,11 @@ def login():
             error = 'Invalid login'
     return render_template('login.html', error=error)
 
+@app.route('/configure', methods=['POST', 'GET'])
+def configure():
+	if request.method == 'GET':
+		return render_template('config.html')
+	elif request.method == 'POST':
+		pass
 if __name__ == '__main__':
     app.run()

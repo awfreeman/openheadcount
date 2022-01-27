@@ -1,0 +1,14 @@
+body {
+    background-color:lightcyan;    
+
+}
+h1 {
+    color: black;
+    font-size: x-large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+p {
+    color: black;
+    font-size: medium;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}

@@ -3,7 +3,27 @@
 </head>
 <div style="text-align: center;">
     <h1>Preview</h1>
-    <img src="/camerafeed">
+    <canvas id="window" width="500" height="500"></canvas>
+    <script>
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        }
+        var c = document.getElementById("window");
+        var ctx = c.getContext("2d");
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = '/previewframe';
+        while(true){
+            sleep(500).then(() => {
+                img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+            };
+            img.src = '/previewframe';
+            })
+        }
+    </script>
     <br>
     <a href="/configure"> Click here to configure zone points </a>
 </div>

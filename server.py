@@ -34,6 +34,15 @@ def generate():
 		# yield the output frame in the byte format
 		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
 			bytearray(encodedImage) + b'\r\n')
+@app.route('/previewframe')
+def getpreview():
+	global imglock
+	with imglock:
+		(flag, encodedImage) = cv.imencode('.jpg', hct.outputframe)
+		if not flag:
+			return "No image"
+		return Response(bytearray(encodedImage), mimetype = "image/jpeg; boundary=frame")
+
 @app.route('/camerafeed')
 def camerafeed():
 	return Response(generate(),

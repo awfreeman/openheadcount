@@ -43,7 +43,6 @@ class headcounter:
                 while vc.isOpened()==False:
                     continue
                 rval, frame = vc.read()
-            frameold = frame
             frame = imutils.resize(frame, width=500)
             (H, W) = frame.shape[:2]
             

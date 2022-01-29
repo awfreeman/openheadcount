@@ -5,24 +5,29 @@
     <h1>Preview</h1>
     <canvas id="window" width="500" height="500"></canvas>
     <script>
-        const sleep = (milliseconds) => {
-            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
         }
-        var c = document.getElementById("window");
-        var ctx = c.getContext("2d");
-        var img = new Image();
-        img.onload = function() {
-            ctx.drawImage(img, 0, 0);
-        };
-        img.src = '/previewframe';
-        while(true){
-            sleep(500).then(() => {
+        async function drawImage() {
+            var c = document.getElementById("window")
+            var ctx = c.getContext("2d")
+            while (true) {
+                var img = new Image()
+                let url = '/previewframe'
+                let imageurl
+                fetch(url)
+                .then(response => response.blob())
+                .then(imageBlob => {
+                    return URL.createObjectURL(imageBlob)})
+                .then(url => {img.src=url})
                 img.onload = function() {
-            ctx.drawImage(img, 0, 0);
-            };
-            img.src = '/previewframe';
-            })
+                    ctx.drawImage(img, 0, 0)
+                }
+                
+                await sleep(100)
+            }
         }
+        drawImage()
     </script>
     <br>
     <a href="/configure"> Click here to configure zone points </a>

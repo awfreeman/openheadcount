@@ -68,7 +68,6 @@ def configure():
 	if request.method == 'GET':
 		return render_template('config.html')
 	elif request.method == 'POST':
-		coords = request.form['gridcoords']
-		return coords
+		pass
 if __name__ == '__main__':
     app.run()

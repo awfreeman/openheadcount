@@ -1,15 +1,34 @@
 <head>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<div>
-    <canvas id="window" width="500" height="500"></canvas>
+<div style="text-align: center;">
+    <canvas id="window" width="500" height="500"></canvas><br>
+    <button id="confirm" width="75" height="20">Submit</button>
+    <button id="clear" width="75" height="20">Clear</button>
     <script>
+        array = new Array()
         var c = document.getElementById("window");
+        var button = document.getElementById("confirm")
+        var clearbutton = document.getElementById("clear")
         var ctx = c.getContext("2d");
         var img = new Image();
         img.onload = function() {
             ctx.drawImage(img, 0, 0);
         };
         img.src = '/previewframe';
+        c.addEventListener('click', function(event){
+            let x = event.pageX - c.offsetLeft
+            let y = event.pageY - c.offsetTop
+            array.push([x,y])
+        })
+        button.addEventListener('click', function(event){
+            console.log(array.toString())
+            
+        })
+        clearbutton.addEventListener('click', function(event){
+            array = new Array()
+            console.log("cleared")
+        })
+
     </script>
 </div>

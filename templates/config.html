@@ -6,15 +6,18 @@
     <button id="confirm" width="75" height="20">Submit</button>
     <button id="clear" width="75" height="20">Clear</button>
     <script>
+        function tojson(ar){
+            str = "{Points:"
+        }
         array = new Array()
-        var c = document.getElementById("window");
-        var button = document.getElementById("confirm")
-        var clearbutton = document.getElementById("clear")
-        var ctx = c.getContext("2d");
-        var img = new Image();
+        let c = document.getElementById("window");
+        let button = document.getElementById("confirm")
+        let clearbutton = document.getElementById("clear")
+        let ctx = c.getContext("2d")
+        let img = new Image()
         img.onload = function() {
-            ctx.drawImage(img, 0, 0);
-        };
+            ctx.drawImage(img, 0, 0)
+        }
         img.src = '/previewframe';
         c.addEventListener('click', function(event){
             let x = event.pageX - c.offsetLeft
@@ -24,6 +27,15 @@
         button.addEventListener('click', function(event){
             console.log(array.toString())
             
+            const response = fetch("/configure", {
+                method : 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(array),
+                })
         })
         clearbutton.addEventListener('click', function(event){
             array = new Array()

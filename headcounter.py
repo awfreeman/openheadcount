@@ -26,10 +26,11 @@ class headcounter:
         self.track = None
         self.outputframe = None
     def run(self, stoplock, getlock, imglock, path, vertexes):
-        vc = cv.VideoCapture(path)
-        while vc.isOpened()==False:
-            continue
-
+        with imglock:
+            vc = cv.VideoCapture(path)
+            while vc.isOpened()==False:
+                continue
+        
         #initialize network and centroid tracker
         net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
         self.track = Tracker(THRESHOLD, HISTORY, vertexes)

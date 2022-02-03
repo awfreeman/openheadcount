@@ -4,7 +4,7 @@ import threading
 from headcounter import headcounter
 import numpy as np
 import cv2 as cv
-import json
+from json import JSONDecoder
 
 app = Flask(__name__)
 
@@ -49,14 +49,7 @@ def configure():
 	elif request.method == 'POST':
 		global t1
 		#get the points given
-		points = json.JSONDecoder().decode(request.get_json())
-		print(points)
-		vertexes = np.array(None)
-		print(type(points))
-		for x in points:
-			print(x)
-		return "PEEPEE"
-		'''
+		vertexes = np.array(request.get_json())
 		if len(vertexes) < 3:
 			return "Invalid point selection"
 		with stoplock:
@@ -67,6 +60,5 @@ def configure():
 		t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
 		t1.start()
 		return "Recieved"
-		'''
 if __name__ == '__main__':
     app.run()

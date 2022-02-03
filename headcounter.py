@@ -37,7 +37,8 @@ class headcounter:
         while True:
             with stoplock:
                 if self.stop:
-                    break
+                    vc.release()
+                    return None
             rval, frame = vc.read()
             if frame is None:
                 vc = cv.VideoCapture("vid.mp4")

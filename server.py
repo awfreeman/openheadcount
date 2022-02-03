@@ -4,16 +4,17 @@ import threading
 from headcounter import headcounter
 import numpy as np
 import cv2 as cv
+import json
 
 app = Flask(__name__)
 
 hct = headcounter()
-lock = threading.Lock()
+stoplock = threading.Lock()
 getlock = threading.Lock()
 imglock = threading.Lock()
 path = 'vid.mp4'
 vertexes = np.array([(0, 372//2), (250, 372//3), (499, 372//2), (499, 372), (0, 372)])
-t1 = threading.Thread(target=hct.run, args=(lock, getlock, imglock, path, vertexes))
+t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
 t1.start()
 
 @app.route('/previewframe')
@@ -46,9 +47,26 @@ def configure():
 	if request.method == 'GET':
 		return render_template('config.html')
 	elif request.method == 'POST':
-		json = request.get_json()
-		points = convert_to_numpy(json)
-
+		global t1
+		#get the points given
+		points = json.JSONDecoder().decode(request.get_json())
+		print(points)
+		vertexes = np.array(None)
+		print(type(points))
+		for x in points:
+			print(x)
+		return "PEEPEE"
+		'''
+		if len(vertexes) < 3:
+			return "Invalid point selection"
+		with stoplock:
+			hct.stop = True
+		while t1.is_alive():
+			continue
+		hct.stop = False
+		t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
+		t1.start()
 		return "Recieved"
+		'''
 if __name__ == '__main__':
     app.run()

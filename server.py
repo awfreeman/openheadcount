@@ -42,10 +42,10 @@ def login():
             error = 'Invalid login'
     return render_template('login.html', error=error)
 
-@app.route('/configure', methods=['POST', 'GET'])
-def configure():
+@app.route('/configurezones', methods=['POST', 'GET'])
+def configurezones():
 	if request.method == 'GET':
-		return render_template('config.html')
+		return render_template('configzones.html')
 	elif request.method == 'POST':
 		global t1
 		#get the points given

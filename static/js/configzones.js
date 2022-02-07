@@ -48,7 +48,7 @@ c.addEventListener('click', function(event){
 button.addEventListener('click', function(event){
     console.log(array.toString())
     
-    const response = fetch("/configure", {
+    const response = fetch("/configurezones", {
         method : 'POST',
         mode: 'cors',
         headers: {

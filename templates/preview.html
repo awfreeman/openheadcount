@@ -6,5 +6,25 @@
     <canvas id="window" width="500" height="500"></canvas>
     <script src="static/js/drawpreview.js"></script>
     <br>
+    <form method="post">
+        <label for="URI">Camera URI:</label>
+        <input type="text" id="URI" name="URI">
+        <input type="button" value="Submit" onclick="SubmitURI()"/>
+        <script>
+            function SubmitURI(){
+                let element = document.getElementById("URI").value
+                const response = fetch("/CONFIGURI", {
+                    method: 'POST',
+                    mode:'cors',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: JSON.stringify(element),
+                
+                })
+            }
+        </script>
+    </form>
     <a href="/configurezones"> Click here to configure zone points </a>
 </div>

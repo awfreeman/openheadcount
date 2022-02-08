@@ -16,7 +16,19 @@ path = 'vid.mp4'
 vertexes = np.array([(0, 372//2), (250, 372//3), (499, 372//2), (499, 372), (0, 372)])
 t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
 t1.start()
-
+@app.route('/CONFIGURI', methods=['POST'])
+def configuri():
+	global t1
+	global path
+	path = request.json
+	with stoplock:
+		hct.stop = True
+	while t1.is_alive():
+		continue
+	hct.stop = False
+	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
+	t1.start()
+	return 'YES'
 @app.route('/previewframe')
 def getpreview():
 	global imglock
@@ -25,7 +37,7 @@ def getpreview():
 		if not flag:
 			return "No image"
 		return Response(bytearray(encodedImage), mimetype = "image/jpeg; boundary=frame")
-
+@app.route('/preview')
 def login_user(uname):
     return render_template('preview.html')
 @app.route('/')
@@ -48,6 +60,7 @@ def configurezones():
 		return render_template('configzones.html')
 	elif request.method == 'POST':
 		global t1
+		global vertexes
 		#get the points given
 		vertexes = np.array(request.get_json())
 		if len(vertexes) < 3:

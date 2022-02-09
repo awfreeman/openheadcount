@@ -22,6 +22,8 @@ path = 'vid.mp4'
 vertexes = np.array([(0, 372//2), (250, 372//3), (499, 372//2), (499, 372), (0, 372)])
 t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
 t1.start()
+
+
 @app.route('/CONFIGURI', methods=['POST'])
 def configuri():
 	global t1
@@ -35,6 +37,8 @@ def configuri():
 	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
 	t1.start()
 	return 'Changed successfully'
+
+
 @app.route('/CONFIGTHRESH', methods=['POST'])
 def configthresh():
 	global t1
@@ -52,6 +56,27 @@ def configthresh():
 	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
 	t1.start()
 	return ret
+
+
+@app.route('/CONFIGHIST', methods=['POST'])
+def confighist():
+	global t1
+	global history
+	with stoplock:
+		hct.stop = True
+	while t1.is_alive():
+		continue
+	hct.stop = False
+	try:
+		history=int(request.json)
+		ret = "Successfully Changed"
+	except ValueError:
+		ret = "invalid value"
+	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
+	t1.start()
+	return ret
+
+
 @app.route('/previewframe')
 def getpreview():
 	global imglock
@@ -60,12 +85,17 @@ def getpreview():
 		if not flag:
 			return "No image"
 		return Response(bytearray(encodedImage), mimetype = "image/jpeg; boundary=frame")
+
+
 @app.route('/preview')
 def login_user(uname):
     return render_template('preview.html')
+
+
 @app.route('/')
 def homepage():
     return render_template('index.html')
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -76,6 +106,7 @@ def login():
         else:
             error = 'Invalid login'
     return render_template('login.html', error=error)
+
 
 @app.route('/configurezones', methods=['POST', 'GET'])
 def configurezones():
@@ -96,5 +127,6 @@ def configurezones():
 		t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
 		t1.start()
 		return "Recieved"
+
 if __name__ == '__main__':
     app.run()

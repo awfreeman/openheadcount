@@ -7,8 +7,6 @@ import threading
 from centroidtracker import Tracker
 
 CONFIDENCE=.4
-THRESHOLD = 15
-HISTORY = 3
 PATH = "vid.mp4"
 
 #load in network
@@ -25,7 +23,7 @@ class headcounter:
         self.stop = False
         self.track = None
         self.outputframe = None
-    def run(self, stoplock, getlock, imglock, path, vertexes):
+    def run(self, stoplock, getlock, imglock, path, vertexes, threshold, history):
         with imglock:
             vc = cv.VideoCapture(path)
             while vc.isOpened()==False:
@@ -33,7 +31,7 @@ class headcounter:
         
         #initialize network and centroid tracker
         net=cv.dnn.readNetFromCaffe(PROTOTXT, MODEL)
-        self.track = Tracker(THRESHOLD, HISTORY, vertexes)
+        self.track = Tracker(threshold, history, vertexes)
         while True:
             with stoplock:
                 if self.stop:

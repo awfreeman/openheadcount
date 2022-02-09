@@ -4,8 +4,14 @@ import threading
 from headcounter import headcounter
 import numpy as np
 import cv2 as cv
-from json import JSONDecoder
+import time
 
+CONFIDENCE = .4
+THRESHOLD = 15
+HISTORY = 3
+PATH = "vid.mp4"
+threshold = THRESHOLD
+history = HISTORY
 app = Flask(__name__)
 
 hct = headcounter()
@@ -14,7 +20,7 @@ getlock = threading.Lock()
 imglock = threading.Lock()
 path = 'vid.mp4'
 vertexes = np.array([(0, 372//2), (250, 372//3), (499, 372//2), (499, 372), (0, 372)])
-t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
+t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
 t1.start()
 @app.route('/CONFIGURI', methods=['POST'])
 def configuri():
@@ -26,9 +32,26 @@ def configuri():
 	while t1.is_alive():
 		continue
 	hct.stop = False
-	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes))
+	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
 	t1.start()
-	return 'YES'
+	return 'Changed successfully'
+@app.route('/CONFIGTHRESH', methods=['POST'])
+def configthresh():
+	global t1
+	global threshold
+	with stoplock:
+		hct.stop = True
+	while t1.is_alive():
+		continue
+	hct.stop = False
+	try:
+		threshold=float(request.json)
+		ret = "Successfully Changed"
+	except ValueError:
+		ret = "invalid value"
+	t1 = threading.Thread(target=hct.run, args=(stoplock, getlock, imglock, path, vertexes, threshold, history))
+	t1.start()
+	return ret
 @app.route('/previewframe')
 def getpreview():
 	global imglock

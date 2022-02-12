@@ -15,7 +15,7 @@ PATH = "vid.mp4"
 threshold = THRESHOLD
 history = HISTORY
 app = Flask(__name__)
-sessiontokens = list()
+sessiontokens = dict()
 hct = headcounter()
 stoplock = threading.Lock()
 getlock = threading.Lock()
@@ -93,6 +93,10 @@ def confighist():
 @app.route('/previewframe')
 def getpreview():
     global imglock
+    global sessiontokens
+    auth = request.cookies.get('auth')
+    if sessiontokens[auth] is None:
+        return 'peepee'
     with imglock:
         (flag, encodedImage) = cv.imencode('.jpg', hct.outputframe)
         if not flag:
@@ -101,10 +105,12 @@ def getpreview():
 
 
 @app.route('/preview')
-def login_user(uname, ):
+def login_user(uname):
+    global sessiontokens
     res = make_response(render_template('preview.html'))
-    key = str(random.SystemRandom().getrandbits(4096))
-    res.set_cookie('auth', key, max_age=60*30)
+    token = str(random.SystemRandom().getrandbits(4096))
+    sessiontokens.update({token: time.time()})
+    res.set_cookie('auth', token, max_age=60*30)
     return res
 
 

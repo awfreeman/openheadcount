@@ -39,7 +39,7 @@ class headcounter:
                     return None
             rval, frame = vc.read()
             if frame is None:
-                vc = cv.VideoCapture("vid.mp4")
+                vc = cv.VideoCapture(path)
                 while vc.isOpened()==False:
                     continue
                 rval, frame = vc.read()

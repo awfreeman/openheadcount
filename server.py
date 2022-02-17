@@ -23,21 +23,27 @@ imglock = threading.Lock()
 path = 'vid.mp4'
 vertexes = np.array([(0, 372//2), (250, 372//3),
                     (499, 372//2), (499, 372), (0, 372)])
+expirytime=60*30
 t1 = threading.Thread(target=hct.run, args=(
     stoplock, getlock, imglock, path, vertexes, threshold, history))
 t1.start()
 
-
-def verify(token):
-    global sessiontokens
-
-    pass
+def authorize(auth):
+    try:
+        if (time.time()-sessiontokens[auth])> expirytime:
+            return False
+    except KeyError:
+        return False
+    return True
 
 
 @app.route('/CONFIGURI', methods=['POST'])
 def configuri():
     global t1
     global path
+    auth = request.cookies.get('auth')
+    if not authorize(auth):
+        return 'Unauthorized'
     path = request.json
     with stoplock:
         hct.stop = True
@@ -54,6 +60,9 @@ def configuri():
 def configthresh():
     global t1
     global threshold
+    auth = request.cookies.get('auth')
+    if not authorize(auth):
+        return 'Unauthorized'
     with stoplock:
         hct.stop = True
     while t1.is_alive():
@@ -74,6 +83,9 @@ def configthresh():
 def confighist():
     global t1
     global history
+    auth = request.cookies.get('auth')
+    if not authorize(auth):
+        return 'Unauthorized'
     with stoplock:
         hct.stop = True
     while t1.is_alive():
@@ -95,8 +107,8 @@ def getpreview():
     global imglock
     global sessiontokens
     auth = request.cookies.get('auth')
-    if sessiontokens[auth] is None:
-        return 'peepee'
+    if not authorize(auth):
+        return 'Unauthorized'
     with imglock:
         (flag, encodedImage) = cv.imencode('.jpg', hct.outputframe)
         if not flag:
@@ -133,6 +145,9 @@ def login():
 @app.route('/configurezones', methods=['POST', 'GET'])
 def configurezones():
     if request.method == 'GET':
+        auth = request.cookies.get('auth')
+        if not authorize(auth):
+            return 'Unauthorized'
         return render_template('configzones.html')
     elif request.method == 'POST':
         global t1

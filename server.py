@@ -37,6 +37,11 @@ def authorize(auth):
     return True
 
 
+def getcount():
+    with getlock:
+        return hct.track.count
+
+
 @app.route('/CONFIGURI', methods=['POST'])
 def configuri():
     global t1
@@ -185,4 +190,4 @@ def shutdown():
 		exit()
 '''
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0")

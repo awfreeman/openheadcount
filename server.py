@@ -167,7 +167,7 @@ def configurezones():
             continue
         hct.stop = False
         t1 = threading.Thread(target=hct.run, args=(
-            stoplock, getlock, imglock, path, vertexes))
+            stoplock, getlock, imglock, path, vertexes, threshold, history))
         t1.start()
         return "Recieved"
 

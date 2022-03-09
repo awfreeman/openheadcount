@@ -36,10 +36,10 @@ def authorize(auth):
         return False
     return True
 
-
+@app.route('/getcount')
 def getcount():
     with getlock:
-        return hct.track.count
+        return str(hct.track.count)
 
 
 @app.route('/CONFIGURI', methods=['POST'])
@@ -170,7 +170,6 @@ def configurezones():
             stoplock, getlock, imglock, path, vertexes, threshold, history))
         t1.start()
         return "Recieved"
-
 
 '''
 @app.route('/SHUTDOWN', methods['POST'])

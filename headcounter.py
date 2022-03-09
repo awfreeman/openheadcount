@@ -83,7 +83,6 @@ class headcounter:
                     frame = cv.putText(frame, "In", x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
                 else:
                     frame = cv.putText(frame, "Out", x[0], cv.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 6)
-            frame = cv.putText(frame, str(self.track.count), (0, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 6)
             with imglock:
                 self.outputframe = frame.copy()
             cv.pollKey()

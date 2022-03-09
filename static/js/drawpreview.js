@@ -2,12 +2,13 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 async function drawImage() {
-    var c = document.getElementById("window")
-    var ctx = c.getContext("2d")
+    let c = document.getElementById("window")
+    let counter = document.getElementById("counter")
+    let ctx = c.getContext("2d")
+    let accum 
     while (true) {
-        var img = new Image()
+        let img = new Image()
         let url = '/previewframe'
-        let imageurl
         fetch(url)
         .then(response => response.blob())
         .then(imageBlob => {
@@ -16,6 +17,9 @@ async function drawImage() {
         img.onload = function() {
             ctx.drawImage(img, 0, 0)
         }
+        fetch('/getcount').then(response => response.text()).then(text =>{
+            counter.innerHTML="Current Count:"+text
+        })
         await sleep(100)
     }
 }

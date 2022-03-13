@@ -7,20 +7,20 @@ import cv2 as cv
 import time
 import random
 import sys
-
-CONFIDENCE = .4
-THRESHOLD = 15
-HISTORY = 3
-PATH = "vid.mp4"
-threshold = THRESHOLD
-history = HISTORY
+import yaml
+settingsyaml = open('conf/settings.yaml')
+settings = yaml.safe_load(settingsyaml)
+print(settings)
+confidence = settings["confidence"]
+threshold = settings["threshold"]
+history = settings["history"]
 app = Flask(__name__)
 sessiontokens = dict()
 hct = headcounter()
 stoplock = threading.Lock()
 getlock = threading.Lock()
 imglock = threading.Lock()
-path = 'vid.mp4'
+path = settings["uri"]
 vertexes = np.array([(0, 372//2), (250, 372//3),
                     (499, 372//2), (499, 372), (0, 372)])
 expirytime=60*30

@@ -1,0 +1,4 @@
+confidence: 0.4
+threshold: 15
+history: 3
+uri: "vid.mp4"

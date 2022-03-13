@@ -22,18 +22,20 @@ imglock = threading.Lock()
 path = settings["uri"]
 vertexes = np.array([(0, 372//2), (250, 372//3),
                     (499, 372//2), (499, 372), (0, 372)])
-expirytime=60*30
+expirytime = 60*30
 t1 = threading.Thread(target=hct.run, args=(
     stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
 t1.start()
 
+
 def authorize(auth):
     try:
-        if (time.time()-sessiontokens[auth])> expirytime:
+        if (time.time()-sessiontokens[auth]) > expirytime:
             return False
     except KeyError:
         return False
     return True
+
 
 @app.route('/getcount')
 def getcount():
@@ -169,6 +171,7 @@ def configurezones():
             stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
         t1.start()
         return "Recieved"
+
 
 '''
 @app.route('/SHUTDOWN', methods['POST'])

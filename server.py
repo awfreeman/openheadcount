@@ -10,7 +10,6 @@ import sys
 import yaml
 settingsyaml = open('conf/settings.yaml')
 settings = yaml.safe_load(settingsyaml)
-print(settings)
 confidence = settings["confidence"]
 threshold = settings["threshold"]
 history = settings["history"]
@@ -25,7 +24,7 @@ vertexes = np.array([(0, 372//2), (250, 372//3),
                     (499, 372//2), (499, 372), (0, 372)])
 expirytime=60*30
 t1 = threading.Thread(target=hct.run, args=(
-    stoplock, getlock, imglock, path, vertexes, threshold, history))
+    stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
 t1.start()
 
 def authorize(auth):
@@ -56,7 +55,7 @@ def configuri():
         continue
     hct.stop = False
     t1 = threading.Thread(target=hct.run, args=(
-        stoplock, getlock, imglock, path, vertexes, threshold, history))
+        stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
     t1.start()
     return 'Changed successfully'
 
@@ -79,7 +78,7 @@ def configthresh():
     except ValueError:
         ret = "invalid value"
     t1 = threading.Thread(target=hct.run, args=(
-        stoplock, getlock, imglock, path, vertexes, threshold, history))
+        stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
     t1.start()
     return ret
 
@@ -102,7 +101,7 @@ def confighist():
     except ValueError:
         ret = "invalid value"
     t1 = threading.Thread(target=hct.run, args=(
-        stoplock, getlock, imglock, path, vertexes, threshold, history))
+        stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
     t1.start()
     return ret
 
@@ -167,7 +166,7 @@ def configurezones():
             continue
         hct.stop = False
         t1 = threading.Thread(target=hct.run, args=(
-            stoplock, getlock, imglock, path, vertexes, threshold, history))
+            stoplock, getlock, imglock, path, vertexes, threshold, history, confidence))
         t1.start()
         return "Recieved"
 

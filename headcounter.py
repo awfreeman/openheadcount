@@ -6,8 +6,6 @@ import numpy as np
 import threading
 from centroidtracker import Tracker
 
-CONFIDENCE=.4
-PATH = "vid.mp4"
 
 #load in network
 MODEL='mobnet/MobileNetSSD_deploy.caffemodel'
@@ -23,7 +21,7 @@ class headcounter:
         self.stop = False
         self.track = None
         self.outputframe = None
-    def run(self, stoplock, getlock, imglock, path, vertexes, threshold, history):
+    def run(self, stoplock, getlock, imglock, path, vertexes, threshold, history, confidence):
         with imglock:
             vc = cv.VideoCapture(path)
             while vc.isOpened()==False:

@@ -55,7 +55,7 @@ class headcounter:
             newobjects = list()
             for i in np.arange(0, outputs.shape[2]):
                 idx = int(outputs[0, 0, i, 1])
-                if CLASSES[idx] == "person" and float(outputs[0, 0, i, 2]) > CONFIDENCE:
+                if CLASSES[idx] == "person" and float(outputs[0, 0, i, 2]) > confidence:
 
                     # get new centroids
                     box = outputs[0, 0, i, 3:7] * np.array([W, H, W, H])

@@ -10,6 +10,7 @@ import sys
 import yaml
 settingsyaml = open('conf/settings.yaml')
 settings = yaml.safe_load(settingsyaml)
+settingsyaml.close()
 confidence = settings["confidence"]
 threshold = settings["threshold"]
 history = settings["history"]
@@ -39,6 +40,9 @@ def authorize(auth):
 
 @app.route('/getcount')
 def getcount():
+    auth = request.cookies.get('auth')
+    if not authorize(auth):
+        return 'Unauthorized'
     with getlock:
         return str(hct.track.count)
 
@@ -172,7 +176,19 @@ def configurezones():
         t1.start()
         return "Recieved"
 
-
+@app.route('/SAVE', methods=['POST'])
+def savesettings():
+    auth = request.cookies.get('auth')
+    if not authorize(auth):
+        return 'Unauthorized'
+    settingsyaml = open('conf/settings.yaml', 'r+')
+    settings["confidence"]=confidence
+    settings["threshold"]=threshold
+    settings["history"]=history
+    settings["uri"]=path
+    yaml.safe_dump(settings, settingsyaml)
+    settingsyaml.close()
+    return "success"
 '''
 @app.route('/SHUTDOWN', methods['POST'])
 def shutdown():

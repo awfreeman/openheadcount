@@ -4,7 +4,7 @@ A web application for counting the number of people that enter and exit a busine
 ## Running
 In order to run OpenHeadCount, you will need Python 3 and a number of dependencies, which can be installed with the following command:
 ```bash
-pip install opencv-python numpy flask
+pip install opencv-python numpy flask pandas scipy bcrypt imutils
 ```
 
 After installing the dependencies, use the following command to start OpenHeadCount:
